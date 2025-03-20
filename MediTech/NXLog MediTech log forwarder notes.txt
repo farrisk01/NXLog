@@ -1,0 +1,47 @@
+NXLog
+Domain Controllers
+Below is the link to the NXLog installer:
+https://nxlog.co/products/nxlog-community-edition/download
+
+Configuration Instructions
+1. Install NXLog on the server
+2. Copy the config file attached to this email to the following directory:
+  C:\Program Files\nxlog\conf\ (Note: if you are installing NXlog onto another drive besides C:\ you’ll find the NXLog directories on that drive)
+3. Rename the config file to "nxlog.conf"
+4. Restart the NXLog service
+5. Notify Fortified that the configuration is complete and please provide the Name and IP Address of each server so we can apply the correct plugins
+
+
+Breakdown:
+Lines 1-23: Defines NXLog working directories and syslog server & port
+Lines 29-34: Custom extension defining eight custom fields of type string separated
+             by "|". The "|" symbol was used because NXLog recognized few of the
+             ASCII symbols as delimiters and many of the common ASCII characters
+             were already present in the log file rendering them useless.
+Lines 36-40: Defines the logs source as any file with a .log extension residing
+             in a specified folder.
+Lines 42-51: Assigning each log to $raw_event, this section matches logs that begin
+             with '[' and identifies fields with one or more non-whitespaces
+             separated by one or more whitespaces.
+             Pattern Breakdown:
+                 \[   : Matches the opening square bracket [ literally.
+                (\S+) : Captures one or more non-whitespace characters (separated
+                        by spaces) and assigns them to the first capture group.
+                \s+   : Matches one or more whitespace characters (spaces, tabs).
+                \]    : Matches the closing square bracket ] literally.
+                \s+   : Matches one or more whitespace characters after the closing
+                        bracket.
+                (.*)  : Captures the remaining part of the log event as a single
+                        group (the actual log message).
+
+             Once the fields are identified by regex they are assigned to variables
+            $1-$8($0 contains the entire log). The variable are then reassigned
+             to $raw_event using "|" as a separater. $raw_event is then passed to
+             extension parse_csv using MediTech_csv as the definition.
+
+             The parsed $raw_event is then assigned to $Message and $SourceName is
+             defined as "Meditech".
+Lines 54-59: This section takes the contents of $Message, converts it to JSON, then
+             sends it to the predefined syslog server using the IP & port previously
+             defined by variables OUTPUT_DESTINATION_ADDRESS & OUTPUT_DESTINATION_PORT.
+             

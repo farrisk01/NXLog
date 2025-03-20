@@ -1,0 +1,3 @@
+v1 - Using DC .v5 config and added Windows defender logging
+
+ 

@@ -1,0 +1,8 @@
+v3 - Removed filtering for eventID's 4662, 5140, 5145. Added code to reduce size of log message section for these events.
+v4 -  Added code to reduce size of log message section for EventID 4799
+
+
+Development:
+v3A - Added section for OWA logging
+
+
